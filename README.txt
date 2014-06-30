@@ -1,7 +1,9 @@
+=======
 django-mentions
-===============
+=======
 
-Twitter-like mentions for django
+Facebook-like mentions for Django
+-----------------------------------------------------
 
 Installation
 """"""""""""
@@ -37,7 +39,6 @@ Implement a mention provider:
 
 Add this provider to your **settings.py**:
 ::
-
     MENTIONS_PROVIDERS = {
         # You can put your provider anywhere you want
         'default': [
@@ -47,7 +48,6 @@ Add this provider to your **settings.py**:
 
 Use `mentions.forms.MentionTextarea` widget instead of the default one:
 ::
-
     from mentions.forms import MentionTextarea
 
     class PostForm(forms.ModelForm):
@@ -59,5 +59,4 @@ Use `mentions.forms.MentionTextarea` widget instead of the default one:
 
 To urlize mentions in your templates, use `urlize_mentions` filter:
 ::
-
     {{ post.text|urlize_mentions }}
