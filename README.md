@@ -3,9 +3,7 @@ django-mentions
 
 Twitter-like mentions for django
 
-Installation
-""""""""""""
-Add aplication to INSTALLED_APPS in **settings.py**:
+Add application to INSTALLED_APPS in **settings.py**:
 ::
 
     INSTALLED_APPS = (
