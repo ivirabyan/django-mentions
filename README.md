@@ -4,7 +4,6 @@ django-mentions
 Twitter-like mentions for django
 
 Add application to INSTALLED_APPS in **settings.py**:
-::
 
     INSTALLED_APPS = (
         ...,
@@ -12,15 +11,13 @@ Add application to INSTALLED_APPS in **settings.py**:
     )
 
 Add app urls to your **urls.py**:
-::
 
     urlpatterns = patterns('',
         ...
         url(r'^mentions/', include('mentions.urls')),
     )
 
-Implement a mention provider:
-::
+Implement a mention provider (in mentions.py module, for example):
 
     from mentions.providers import Provider
 
@@ -34,17 +31,14 @@ Implement a mention provider:
             return self.get_queryset().filter(username__istartswith=term)
 
 Add this provider to your **settings.py**:
-::
 
     MENTIONS_PROVIDERS = {
-        # You can put your provider anywhere you want
         'default': [
             'accounts.mentions.UserProvider'
         ]
     }
 
 Use `mentions.forms.MentionTextarea` widget instead of the default one:
-::
 
     from mentions.forms import MentionTextarea
 
@@ -56,6 +50,5 @@ Use `mentions.forms.MentionTextarea` widget instead of the default one:
             }
 
 To urlize mentions in your templates, use `urlize_mentions` filter:
-::
 
     {{ post.text|urlize_mentions }}
