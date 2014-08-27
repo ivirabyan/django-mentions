@@ -2,8 +2,7 @@
 (function() {
   var Key, MentionsInput, Selection, mimicProperties, namespace, settings,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __slice = [].slice,
-    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+    __slice = [].slice;
 
   namespace = "mentionsInput";
 
@@ -25,7 +24,8 @@
       if (end == null) {
         end = start;
       }
-      return input[0].setSelectionRange(start, end);
+      input[0].selectStart = start;
+      return input[0].selectionEnd = end;
     }
   };
 
@@ -285,9 +285,11 @@
           value = this._cutChar(value, index);
           newval = this._cutChar(newval, index);
         }
-        selection = Selection.get(this.input);
-        this.input.val(newval);
-        return Selection.set(this.input, selection.start);
+        if (value !== newval) {
+          selection = Selection.get(this.input);
+          this.input.val(newval);
+          return Selection.set(this.input, selection.start);
+        }
       }
     };
 
@@ -364,6 +366,10 @@
       return this._updateValue();
     };
 
+    MentionsInput.prototype.getValue = function() {
+      return this.hidden.val();
+    };
+
     MentionsInput.prototype.clear = function() {
       this.input.val('');
       return this._update();
@@ -380,21 +386,21 @@
   })();
 
   $.fn[namespace] = function() {
-    var args, options;
+    var args, options, returnValue;
     options = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-    return this.each(function() {
+    returnValue = this;
+    this.each(function() {
       var instance;
       if (typeof options === 'string' && options.charAt(0) !== '_') {
         instance = $(this).data('mentionsInput');
-        console.log('hello', options, instance, __indexOf.call(instance, options) >= 0);
         if (options in instance) {
-          console.log('hi tehre');
-          return instance[options].apply(instance, args);
+          return returnValue = instance[options].apply(instance, args);
         }
       } else {
         return $(this).data('mentionsInput', new MentionsInput($(this), options));
       }
     });
+    return returnValue;
   };
 
 }).call(this);

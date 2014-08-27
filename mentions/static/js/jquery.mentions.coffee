@@ -15,7 +15,8 @@ Selection =
 		end: input[0].selectionEnd
 
 	set: (input, start, end=start) ->
-		input[0].setSelectionRange(start, end)
+		input[0].selectStart = start
+		input[0].selectionEnd = end
 
 
 settings =
@@ -215,9 +216,11 @@ class MentionsInput
 			while (index = value.indexOf(@marker)) >= 0
 				value = @_cutChar(value, index)
 				newval = @_cutChar(newval, index)
-			selection = Selection.get(@input)
-			@input.val(newval)
-			Selection.set(@input, selection.start)
+
+			if value != newval
+				selection = Selection.get(@input)
+				@input.val(newval)
+				Selection.set(@input, selection.start)
 
 	_addMention: (mention) =>
 		@mentions.push(mention)
@@ -262,6 +265,9 @@ class MentionsInput
 		@input.val(value)
 		@_updateValue()
 
+	getValue: ->
+		return @hidden.val()
+
 	clear: ->
 		@input.val('')
 		@_update()
@@ -272,13 +278,14 @@ class MentionsInput
 		@container.replaceWith(@input)
 
 $.fn[namespace] = (options, args...) ->
+	returnValue = this
+
 	this.each(->
 		if typeof options == 'string' and options.charAt(0) != '_'
 			instance = $(this).data('mentionsInput')
-			console.log('hello', options, instance, options in instance)
 			if options of instance
-				console.log('hi tehre')
-				instance[options](args...)
+				returnValue = instance[options](args...)
 		else
 			$(this).data('mentionsInput', new MentionsInput($(this), options))
 	)
+	return returnValue
