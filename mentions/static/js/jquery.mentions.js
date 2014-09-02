@@ -540,6 +540,7 @@
 
     MentionsContenteditable.prototype._onSelect = function(event, ui) {
       this._addMention(ui.item);
+      this.input.trigger("change." + namespace);
       return false;
     };
 
@@ -558,6 +559,12 @@
           return sel.addRange(range);
         }
       });
+    };
+
+    MentionsContenteditable.prototype.update = function() {
+      this._initValue();
+      this._initEvents();
+      return this.input.focus();
     };
 
     MentionsContenteditable.prototype.append = function() {
