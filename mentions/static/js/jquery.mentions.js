@@ -139,14 +139,16 @@
       return $.ui.autocomplete.prototype.search.call(this, value, event);
     },
     _setDropdownPosition: function(node) {
-      var boundary, rect;
+      var boundary, posX, posY, rect;
       if (this.options.showAtCaret) {
         boundary = document.createRange();
         boundary.setStart(node, this.start);
         boundary.collapse(true);
         rect = boundary.getClientRects()[0];
+        posX = rect.left + window.scrollX;
+        posY = rect.top + rect.height + window.scrollY;
         this.options.position.of = document;
-        return this.options.position.at = "left+" + rect.left + " top+" + (rect.top + rect.height);
+        return this.options.position.at = "left+" + posX + " top+" + posY;
       }
     }
   });
@@ -481,7 +483,7 @@
     }
 
     mentionTpl = function(mention) {
-      return "<span data-mention=\"" + mention.uid + "\">" + mention.value + "</span>";
+      return "<strong data-mention=\"" + mention.uid + "\">" + mention.value + "</strong>";
     };
 
     insertMention = function(mention, pos, suffix) {
@@ -538,6 +540,7 @@
 
     MentionsContenteditable.prototype._onSelect = function(event, ui) {
       this._addMention(ui.item);
+      this.input.trigger("change." + namespace);
       return false;
     };
 
@@ -556,6 +559,12 @@
           return sel.addRange(range);
         }
       });
+    };
+
+    MentionsContenteditable.prototype.update = function() {
+      this._initValue();
+      this._initEvents();
+      return this.input.focus();
     };
 
     MentionsContenteditable.prototype.append = function() {
@@ -617,7 +626,7 @@
           return returnValue = instance[options].apply(instance, args);
         }
       } else {
-        if (this.isContentEditable) {
+        if (this.isContentEditable || this.contentEditable === "true") {
           return $(this).data('mentionsInput', new MentionsContenteditable($(this), options));
         } else {
           return $(this).data('mentionsInput', new MentionsInput($(this), options));
