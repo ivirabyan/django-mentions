@@ -48,12 +48,13 @@ def register_listener(cls, field):
 
 def preserve_orig_values(instance, field, **kwargs):
     setattr(instance, '_%s_initial' % field.name,
-            field.value_from_object(instance))
+            field.value_to_string(instance))
 
 
 def process_mentions(instance, created, field, **kwargs):
     initial = getattr(instance, '_%s_initial' % field.name)
-    text = field.value_from_object(instance)
+    text = field.value_to_string(instance)
+
     if not created and initial == text:
         return
 
