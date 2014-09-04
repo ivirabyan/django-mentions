@@ -635,7 +635,7 @@
           return returnValue = instance[options].apply(instance, args);
         }
       } else {
-        if (this.tagName in ['INPUT', 'TEXTAREA']) {
+        if (/INPUT|TEXTAREA/i.test(this.tagName)) {
           return $(this).data('mentionsInput', new MentionsInput($(this), options));
         } else if (this.contentEditable === "true") {
           return $(this).data('mentionsInput', new MentionsContenteditable($(this), options));
@@ -646,3 +646,5 @@
   };
 
 }).call(this);
+
+//# sourceMappingURL=jquery.mentions.map

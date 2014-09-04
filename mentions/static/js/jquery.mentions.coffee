@@ -462,7 +462,7 @@ $.fn[namespace] = (options, args...) ->
             if options of instance
                 returnValue = instance[options](args...)
         else
-            if this.tagName of ['INPUT', 'TEXTAREA']
+            if (/INPUT|TEXTAREA/i).test(this.tagName)
                 $(this).data 'mentionsInput', new MentionsInput($(this), options)
             else if this.contentEditable == "true"
                 $(this).data 'mentionsInput', new MentionsContenteditable($(this), options)
