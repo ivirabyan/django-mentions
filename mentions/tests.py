@@ -1,14 +1,25 @@
 import json
+import unittest
 from django.test import TestCase
 from django.db import models
 from django import forms
 from django.core.urlresolvers import reverse
+from django.template import Template, Context
+
 from mock import patch
+
+try:
+    import jinja2
+    import jingo
+except ImportError:
+    jinja_support = False
+else:
+    jinja_support = True
+    from .helpers import urlize_mentions
 
 from .models import MentionTextField
 from .registry import Provider, ProviderRegistry
 from .utils import make_mention
-from .helpers import urlize_mentions
 from .forms import MentionTextarea
 
 
@@ -46,9 +57,16 @@ class MentionTest(TestCase):
     def setUp(self):
         self.user = User.objects.create(pk=1, name='Johny')
 
-    def test_filter(self):
+    @unittest.skipIf(not jinja_support, "no jinja support")
+    def test_jinja_filter(self):
         self.text = 'I hate you %s' % make_mention(self.user)
         self.assertEqual(urlize_mentions(self.text),
+                         'I hate you <a href="/users/1/">Johny</a>')
+
+    def test_template_filter(self):
+        context = Context({'text': 'I hate you %s' % make_mention(self.user)})
+        template = Template(r"{% load mentions %}{{ text|urlize_mentions }}")
+        self.assertEqual(template.render(context),
                          'I hate you <a href="/users/1/">Johny</a>')
 
     def test_link(self):
