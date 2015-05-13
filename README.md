@@ -19,7 +19,7 @@ Add app urls to your **urls.py**:
 
 Implement a mention provider (in mentions.py module, for example):
 
-    from mentions.providers import Provider
+    from mentions import Provider
 
     class UserProvider(Provider):
         model = User
