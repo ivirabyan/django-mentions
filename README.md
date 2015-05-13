@@ -50,5 +50,6 @@ Use `mentions.forms.MentionTextarea` widget instead of the default one:
             }
 
 To urlize mentions in your templates, use `urlize_mentions` filter:
-
+    
+    {% load mentions %}
     {{ post.text|urlize_mentions }}
