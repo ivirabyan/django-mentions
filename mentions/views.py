@@ -7,7 +7,10 @@ from .registry import providers
 
 
 def autocomplete(request):
-    term = request.GET.get('term', '')
+    # to be haystack+solr friendly we must strip and join spaces
+    term = request.GET.get('term', '').strip()
+    term = ' '.join(term.split())
+
     collection_name = request.GET.get('mentions', 'default')
 
     ret = []
