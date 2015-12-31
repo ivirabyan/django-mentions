@@ -36,7 +36,7 @@ class MentionTextField(models.TextField):
             register_listener(cls, self)
             # Черствый хак, для того чтобы contribute_to_class вызывался и
             # для дочерних моделей
-            cls._meta.add_virtual_field(AddListener(self))
+            #cls._meta.virtual_fields.append(AddListener(self))
 
 
 def register_listener(cls, field):
